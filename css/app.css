@@ -1,0 +1,135 @@
+/* =====================================================================
+   Minecraft MOTD Generator Pro — app.css
+   Extends the shared design system (base.css). Site chrome colors derive
+   ONLY from base.css CSS variables so dark + light themes both work. The
+   server-list preview intentionally always renders on Minecraft's real
+   dark server-list background, regardless of site theme.
+   ===================================================================== */
+
+/* ---- Theme toggle icon swap (sun in dark, moon in light) ---- */
+[data-theme="light"] .icon-sun { display: none; }
+.icon-moon { display: none; }
+
+/* ===================== Shared pane chrome ===================== */
+.pane { display: flex; flex-direction: column; padding: 0; overflow: hidden; min-width: 0; }
+.pane-head {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border);
+}
+.pane-title {
+  margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--text-secondary);
+}
+
+/* ===================== Toolbar ===================== */
+.toolbar-panel { padding: var(--space-4) var(--space-5); }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
+.toolbar-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.toolbar .spacer { flex: 1; }
+
+/* Color swatch buttons */
+.swatch-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 10px 6px 6px; border-radius: var(--radius-md);
+  border: 1px solid var(--border); background: var(--surface-2);
+  color: var(--text); font: 600 12.5px/1 var(--font-sans);
+  cursor: pointer; transition: transform var(--dur-1) var(--ease), border-color var(--dur-1), background var(--dur-1);
+}
+.swatch-btn:hover { transform: translateY(-1px); border-color: var(--border-strong); background: var(--surface-3); }
+.swatch-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(99,102,241,.45); }
+.swatch-chip {
+  width: 18px; height: 18px; border-radius: 5px; flex: none;
+  border: 1px solid rgba(0,0,0,.35); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+/* Formatting buttons */
+.format-btn { font-family: var(--font-mono); }
+.format-btn[data-fmt="k"] { letter-spacing: -.02em; }
+
+/* ===================== Editor ===================== */
+.editor-panel { margin-top: var(--space-5); }
+.motd-input {
+  font-size: 14px; line-height: 1.6; resize: vertical; min-height: 54px; tab-size: 2;
+}
+.pane-meta { font-size: 12px; }
+.pane-meta.is-warn { color: var(--warning); font-weight: 700; }
+
+/* ===================== Server list preview ===================== */
+.preview-panel { margin-top: var(--space-5); }
+.preview-panel .pane-title { margin-bottom: var(--space-4); }
+
+/* Fixed Minecraft server-list palette: always dark, regardless of site theme */
+.mc-server-row {
+  display: flex; align-items: center; gap: var(--space-4);
+  padding: 14px 16px;
+  background: #2b2b2b;
+  border: 1px solid #1a1a1a;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.mc-server-icon {
+  width: 52px; height: 52px; flex: none; border-radius: 2px;
+  background: #3b3b3b; display: grid; place-items: center;
+  border: 1px solid rgba(255,255,255,.06);
+}
+.mc-server-icon svg { width: 26px; height: 26px; opacity: .6; }
+.mc-server-info { flex: 1; min-width: 0; }
+.mc-server-name {
+  font-family: 'Minecraft', 'Consolas', 'Lucida Console', monospace;
+  color: #ffffff; font-size: 15px; margin-bottom: 4px;
+}
+.mc-motd-line {
+  font-family: 'Minecraft', 'Consolas', 'Lucida Console', monospace;
+  font-size: 13.5px; line-height: 1.5; color: #aaaaaa;
+  white-space: pre; overflow: hidden; text-overflow: ellipsis;
+}
+.mc-server-players {
+  flex: none; color: #55ff55; font-size: 13px; align-self: flex-start; margin-top: 2px;
+}
+
+/* ===================== Output grid ===================== */
+.output-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); margin-top: var(--space-5);
+}
+.output-code {
+  margin: 0; padding: var(--space-5); font-size: 13px; line-height: 1.7;
+  white-space: pre-wrap; word-break: break-word; min-height: 140px; max-height: 320px; overflow: auto;
+  color: var(--text);
+}
+
+/* ===================== Reference table ===================== */
+.reference-panel { margin-top: var(--space-5); }
+.reference-panel .pane-title { margin-bottom: var(--space-4); }
+.table-scroll { overflow-x: auto; }
+.ref-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.ref-table th {
+  text-align: left; padding: 8px 10px; font-size: 11px; font-weight: 700; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-strong);
+}
+.ref-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.ref-table tr:last-child td { border-bottom: none; }
+.ref-swatch { width: 20px; height: 20px; border-radius: 5px; display: inline-block; border: 1px solid rgba(0,0,0,.3); }
+
+/* ===================== Shortcuts modal table ===================== */
+.shortcut-table { width: 100%; border-collapse: collapse; }
+.shortcut-table td { padding: 10px 4px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.shortcut-table tr:last-child td { border-bottom: none; }
+.shortcut-table td:last-child { text-align: right; white-space: nowrap; }
+.shortcut-table kbd + kbd { margin-left: 4px; }
+
+/* ===================== Responsive ===================== */
+@media (max-width: 860px) {
+  .output-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .toolbar .spacer { display: none; }
+  .toolbar-group { width: 100%; }
+  .mc-server-row { flex-wrap: wrap; }
+  .mc-server-players { order: -1; margin-left: auto; }
+}
+
+/* Obfuscated glyphs never animate for users who prefer reduced motion —
+   app.js also skips the interval entirely in that case. */
+@media (prefers-reduced-motion: reduce) {
+  .mc-obfuscated { animation: none !important; }
+}

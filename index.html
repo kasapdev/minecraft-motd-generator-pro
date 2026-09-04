@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090d">
+  <meta name="description" content="Build Minecraft server MOTD and chat text using the real section-sign (§) color and formatting codes, with a live server-list preview and JSON chat-component output.">
+  <title>Minecraft MOTD Generator — Web Utility Suite</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="topbar container">
+    <a class="brand" href="https://github.com/kasapdev/web-utility-suite" aria-label="Back to Web Utility Suite">
+      <span class="logo" aria-hidden="true">
+        <!-- pickaxe / block icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 3.5 21 10l-3 3-6.5-6.5z"/>
+          <path d="M3 21l6-6"/>
+          <path d="M9.5 8.5 3 15l3 3 6.5-6.5"/>
+        </svg>
+      </span>
+      <span class="col" style="gap:0">
+        <span>Minecraft MOTD Generator</span>
+        <span class="sub">Web Utility Suite</span>
+      </span>
+    </a>
+    <span class="spacer"></span>
+
+    <button class="btn btn--icon" data-shortcut-help title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10"/>
+      </svg>
+    </button>
+    <button class="btn btn--icon" data-theme-toggle title="Toggle theme" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+      </svg>
+    </button>
+  </header>
+
+  <main class="container">
+    <!-- Toolbar: colors + formatting -->
+    <section class="panel toolbar-panel fade-in" aria-label="Formatting toolbar">
+      <div class="toolbar">
+        <div class="toolbar-group" id="colorSwatches" aria-label="Color codes" role="group"></div>
+      </div>
+      <div class="toolbar" style="margin-top:var(--space-3)">
+        <div class="toolbar-group" id="formatButtons" aria-label="Formatting codes" role="group"></div>
+        <span class="spacer hide-sm"></span>
+        <div class="toolbar-group">
+          <button id="btnReset" class="btn btn--sm" title="Insert reset code (§r)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+            §r Reset
+          </button>
+          <button id="btnClear" class="btn btn--sm btn--ghost" title="Clear everything">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            Clear
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Editor: two MOTD lines -->
+    <section class="panel editor-panel rise" aria-label="MOTD editor">
+      <div class="field">
+        <div class="row between center">
+          <label for="line1">Line 1</label>
+          <span id="line1Counter" class="muted pane-meta mono">0 / 59</span>
+        </div>
+        <textarea id="line1" class="mono motd-input" rows="2" spellcheck="false" autocapitalize="off" autocomplete="off"
+          aria-label="MOTD line 1" placeholder="§6§lWelcome §rto §a§nmy server"></textarea>
+      </div>
+      <div class="field" style="margin-top:var(--space-4)">
+        <div class="row between center">
+          <label for="line2">Line 2</label>
+          <span id="line2Counter" class="muted pane-meta mono">0 / 59</span>
+        </div>
+        <textarea id="line2" class="mono motd-input" rows="2" spellcheck="false" autocapitalize="off" autocomplete="off"
+          aria-label="MOTD line 2" placeholder="§7Running §fPaper §71.21 §8| §b0/100 players"></textarea>
+      </div>
+    </section>
+
+    <!-- Live preview: Minecraft server list style -->
+    <section class="panel preview-panel fade-in" aria-label="Server list preview">
+      <h2 class="pane-title">Server List Preview</h2>
+      <div class="mc-server-row">
+        <div class="mc-server-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
+        </div>
+        <div class="mc-server-info">
+          <div class="mc-server-name">A Minecraft Server</div>
+          <div id="mcPreviewLine1" class="mc-motd-line"></div>
+          <div id="mcPreviewLine2" class="mc-motd-line"></div>
+        </div>
+        <div class="mc-server-players mono">0/20</div>
+      </div>
+    </section>
+
+    <!-- Output: raw code + JSON -->
+    <section class="output-grid">
+      <div class="pane panel">
+        <div class="pane-head">
+          <h2 class="pane-title">Raw §-coded string</h2>
+          <button id="btnCopyRaw" class="btn btn--sm" title="Copy raw string (Ctrl/Cmd+C)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <pre id="rawOutput" class="output-code mono" tabindex="0" aria-label="Raw section-sign coded string"></pre>
+      </div>
+
+      <div class="pane panel">
+        <div class="pane-head">
+          <h2 class="pane-title">JSON chat component</h2>
+          <button id="btnCopyJson" class="btn btn--sm" title="Copy JSON output">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <pre id="jsonOutput" class="output-code mono" tabindex="0" aria-label="JSON chat component output"></pre>
+      </div>
+    </section>
+
+    <!-- Reference table -->
+    <section class="panel reference-panel fade-in" aria-label="Formatting code reference">
+      <h2 class="pane-title">Code Reference</h2>
+      <div class="table-scroll">
+        <table class="ref-table">
+          <thead>
+            <tr><th>Code</th><th>Swatch</th><th>Name</th><th>Description</th></tr>
+          </thead>
+          <tbody id="refRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer container">
+    Part of the <a href="https://github.com/kasapdev/web-utility-suite">Web Utility Suite</a> · MIT Licensed
+  </footer>
+
+  <!-- Shortcuts help modal -->
+  <div id="helpBackdrop" class="modal-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <div class="row between center" style="margin-bottom:var(--space-4)">
+        <h3 id="helpTitle" style="margin:0">Keyboard shortcuts</h3>
+        <button id="helpClose" class="btn btn--icon btn--ghost" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <table class="shortcut-table">
+        <tbody id="shortcutRows"></tbody>
+      </table>
+      <p class="muted" style="margin:var(--space-4) 0 0;font-size:13px">Tip: <kbd>mod</kbd> means <kbd>Ctrl</kbd> on Windows/Linux and <kbd>⌘</kbd> on macOS.</p>
+    </div>
+  </div>
+
+  <script src="assets/js/core.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
