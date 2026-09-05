@@ -1,6 +1,6 @@
 # Minecraft MOTD Generator Pro
 
-[![CI](https://github.com/kasapdev/minecraft-motd-generator-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/kasapdev/minecraft-motd-generator-pro/actions/workflows/ci.yml)
+[![CI](https://github.com/kasapdev/minecraft-motd-generator-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/kasapdev/minecraft-motd-generator-pro/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) ![Vanilla JS](https://img.shields.io/badge/Vanilla-JS-F7DF1E?logo=javascript&logoColor=black)
 
 Build Minecraft server MOTD and chat text using the real, official `§` color and formatting codes — with a live server-list preview and JSON chat-component export.
 
