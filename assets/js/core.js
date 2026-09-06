@@ -141,6 +141,14 @@
   function registerShortcut(combo, handler, desc) {
     shortcuts.push({ combo: combo, handler: handler, desc: desc || '' });
   }
+  /* True for a plain "copy" combo (mod/ctrl/cmd + C, no other modifiers) —
+     the one combo that collides with the browser/OS's native "copy the
+     current text selection" shortcut. */
+  function isPlainCopyCombo(combo) {
+    var parts = combo.toLowerCase().split('+').map(function (s) { return s.trim(); });
+    return parts.length === 2 && parts[1] === 'c' &&
+      (parts[0] === 'mod' || parts[0] === 'ctrl' || parts[0] === 'cmd');
+  }
   function comboMatches(e, combo) {
     var parts = combo.toLowerCase().split('+').map(function (s) { return s.trim(); });
     var key = parts[parts.length - 1];
@@ -170,7 +178,17 @@
       /* Always allow combos that use a modifier; bare keys ignored while typing */
       var usesMod = /ctrl|cmd|mod|alt/.test(s.combo.toLowerCase());
       if (typing && !usesMod) continue;
-      if (comboMatches(e, s.combo)) { e.preventDefault(); s.handler(e); return; }
+      if (comboMatches(e, s.combo)) {
+        /* Don't hijack the native copy shortcut while the user has an active
+           text selection inside a field — let them copy just the selected
+           text instead of silently replacing it with the app-wide action. */
+        if (typing && isPlainCopyCombo(s.combo) &&
+          typeof e.target.selectionStart === 'number' &&
+          e.target.selectionStart !== e.target.selectionEnd) {
+          continue;
+        }
+        e.preventDefault(); s.handler(e); return;
+      }
     }
   });
 
